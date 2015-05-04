@@ -24,20 +24,33 @@ float kCPSA_StampMoveBackUpAnimationDuration = 0.03;
 #pragma mark - Public
 
 - (void)cpsa_stampWithStampView:(UIView *)stampView location:(CGPoint)location {
+    
+    NSParameterAssert(stampView);
+    
     [UIView cpsa_stampHostView:self withStampView:stampView location:location overdrawKeyframeBlock:nil];
 }
 
 static CGAffineTransform kCPSA_OriginalTransformIncludingRandomRotation;
 
 + (void)cpsa_stampHostView:(UIView *)hostView withStampView:(UIView *)stampView location:(CGPoint)location {
+    
+    NSParameterAssert(hostView);
+    NSParameterAssert(stampView);
+    
     [UIView cpsa_stampHostView:hostView withStampView:stampView location:location overdrawKeyframeBlock:nil];
 }
 
 - (void)cpsa_stampWithStampView:(UIView *)stampView location:(CGPoint)location overdrawKeyframeBlock:(CPSA_OverdrawKeyframeBlock)block {
+    
+    NSParameterAssert(stampView);
+    
     [UIView cpsa_stampHostView:self withStampView:stampView location:location overdrawKeyframeBlock:block];
 }
 
 + (void)cpsa_stampHostView:(UIView *)hostView withStampView:(UIView *)stampView location:(CGPoint)location overdrawKeyframeBlock:(CPSA_OverdrawKeyframeBlock)block {
+    
+    NSParameterAssert(hostView);
+    NSParameterAssert(stampView);
     
     // Calculate destination frame for stamp view
     CGRect destinationFrame = (CGRect){
@@ -72,11 +85,13 @@ static CGAffineTransform kCPSA_OriginalTransformIncludingRandomRotation;
 #pragma mark - Private
 
 - (void)cpsa_animateStampDownWithOverdrawBlock:(CPSA_OverdrawKeyframeBlock)block {
+    
     // Animate stamp down
     [UIView animateWithDuration:kCPSA_StampDownAnimationDuration
                           delay:0.0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
+                         
                          // Scale our stamp to make it smaller (with a slight overdraw)
                          CGAffineTransform scaleTransform = CGAffineTransformMakeScale(0.95, 0.95);
                          self.transform = CGAffineTransformConcat(kCPSA_OriginalTransformIncludingRandomRotation, scaleTransform);
@@ -84,6 +99,7 @@ static CGAffineTransform kCPSA_OriginalTransformIncludingRandomRotation;
                      }
                      completion:^(BOOL finished) {
                          
+                         // Call our block if set
                          if (block) {
                              dispatch_async(dispatch_get_main_queue(), ^{
                                  block();
@@ -101,11 +117,11 @@ static CGAffineTransform kCPSA_OriginalTransformIncludingRandomRotation;
                           delay:0.0
                         options:UIViewAnimationOptionCurveLinear
                      animations:^{
+                         
                          // Scale our stamp to our original transform including our random rotation
                          self.transform = kCPSA_OriginalTransformIncludingRandomRotation;
                      }
                      completion:^(BOOL finished) {
-                         //TODO: Animate wobbling after stamp
                      }];
 }
 
